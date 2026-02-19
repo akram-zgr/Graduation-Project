@@ -3,6 +3,10 @@ import os
 
 load_dotenv()
 
+from flask import request
+import asyncio
+from telegram import Update
+from telegram_bot import create_telegram_application
 from flask import Flask
 from flask_mail import Mail
 from config import Config
@@ -13,6 +17,8 @@ from routes.admin import admin_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+telegram_app = create_telegram_application()
 
 # Initialize extensions
 db.init_app(app)
@@ -44,6 +50,17 @@ with app.app_context():
 def landing():
     from flask import render_template
     return render_template('landing.html')
+
+@app.post(f"/{os.getenv('TELEGRAM_BOT_TOKEN')}")
+def telegram_webhook():
+    try:
+        data = request.get_json()
+        update = Update.de_json(data, telegram_app.bot)
+        asyncio.run(telegram_app.process_update(update))
+        return "OK", 200
+    except Exception as e:
+        print("Telegram webhook error:", e)
+        return "Error", 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
