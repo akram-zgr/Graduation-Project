@@ -545,36 +545,20 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
 # Entry point
 # ---------------------------------------------------------------------------
 
-def main() -> None:
+def create_telegram_application():
     if not TELEGRAM_BOT_TOKEN:
-        logger.error(
-            "TELEGRAM_BOT_TOKEN is not set. "
-            "Add it to your .env file and restart."
-        )
-        raise SystemExit(1)
+        raise RuntimeError("TELEGRAM_BOT_TOKEN is not set.")
 
-    app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+    telegram_app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
 
-    app.add_handler(CommandHandler("start",  start_command))
-    app.add_handler(CommandHandler("help",   help_command))
-    app.add_handler(CommandHandler("reset",  reset_command))
-    app.add_handler(CommandHandler("status", status_command))
-    app.add_handler(CallbackQueryHandler(callback_router))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    app.add_error_handler(error_handler)
+    telegram_app.add_handler(CommandHandler("start",  start_command))
+    telegram_app.add_handler(CommandHandler("help",   help_command))
+    telegram_app.add_handler(CommandHandler("reset",  reset_command))
+    telegram_app.add_handler(CommandHandler("status", status_command))
+    telegram_app.add_handler(CallbackQueryHandler(callback_router))
+    telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    telegram_app.add_error_handler(error_handler)
 
-    logger.info("University Academic Chatbot (Telegram) is starting...")
-    logger.info("Multi-university › faculty › department flow: ENABLED")
-    logger.info("Press Ctrl+C to stop.")
-    PORT = int(os.environ.get("PORT", 10000))
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+    return telegram_app
 
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        url_path=TELEGRAM_BOT_TOKEN,
-        webhook_url=f"{WEBHOOK_URL}/{TELEGRAM_BOT_TOKEN}",
-    )
 
-if __name__ == "__main__":
-    main()
