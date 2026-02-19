@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Algerian Universities AI{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- Added back to home button -->
+        <a href="{{ url_for('landing') }}" class="back-to-home">
+            <span>←</span> Back to Home
+        </a>
+        
+        <div class="auth-header">
+            <h1>Welcome Back</h1>
+            <p>Log in to continue to EduVerse AI</p>
+        </div>
+        
+        <!-- Changed to client-side form with JavaScript -->
+        <form id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="student@gmail.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            
+            <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign up</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('errorMessage');
+
+    errorDiv.style.display = 'none';
+    
+    try {
+        const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+
+            const role = data.user.role;
+
+            if (role === "super_admin" || role === "university_admin") {
+                window.location.href = "/admin";
+            } else {
+                window.location.href = "/chat/";
+            }
+
+        } else {
+            errorDiv.textContent = data.error || "Invalid login credentials";
+            errorDiv.style.display = 'block';
+        }
+
+    } catch (error) {
+        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

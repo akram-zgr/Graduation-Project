@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Algerian Universities AI Assistant{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+        <h1 id="dashboardTitle">Admin Dashboard</h1>
+        <div class="admin-actions">
+            <span id="adminNameDisplay" style="margin-right: 15px; color: var(--text-secondary);"></span>
+            <button id="refreshBtn" class="btn btn-secondary">Refresh</button>
+            <button id="logoutBtn" class="btn btn-outline">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-tabs">
+        <button class="tab-button active" data-tab="overview">Overview</button>
+        <button class="tab-button" data-tab="users">Users</button>
+        <button class="tab-button" data-tab="universities">Universities</button>
+        <button class="tab-button" data-tab="knowledge">Knowledge Base</button>
+        <button class="tab-button" data-tab="departments">Departments</button>
+        <button class="tab-button" data-tab="analytics">Analytics</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div class="tab-content active" id="overview-tab">
+        <!-- Stats Cards -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #667eea;">👥</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalUsers">-</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-detail" id="verifiedUsers">- verified</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #48bb78;">💬</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalChats">-</div>
+                    <div class="stat-label">Total Chats</div>
+                    <div class="stat-detail" id="newChatsWeek">- this week</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #f56565;">📝</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalMessages">-</div>
+                    <div class="stat-label">Total Messages</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #ed8936;">🔤</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalTokens">-</div>
+                    <div class="stat-label">Total Tokens</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Most Active Users -->
+        <div class="admin-section">
+            <h2>Most Active Users</h2>
+            <div class="data-table">
+                <table id="activeUsersTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Chats</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activeUsersBody">
+                        <tr>
+                            <td colspan="3">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="tab-content" id="users-tab">
+
+        <!-- Users Section -->
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>Users Management</h2>
+                <div class="section-filters">
+                    <select id="userFilter" class="filter-select">
+                        <option value="all">All Users</option>
+                        <option value="verified">Verified Only</option>
+                        <option value="unverified">Unverified Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="data-table">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>University</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Top Users Section -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2>Most Active Users</h2>
+                </div>
+
+                <div class="top-users-list" id="topUsersList">
+                    <p style="padding: 20px; color: var(--text-secondary);">Loading...</p>
+                </div>
+            </div>
+
+            <!-- Chats Section -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2>Recent Chats</h2>
+                </div>
+
+                <div class="data-table">
+                    <table id="chatsTable">
+                        <thead>
+                            <tr>
+                                <th>Chat Title</th>
+                                <th>User</th>
+                                <th>Messages</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chatsTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 40px;">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="universities-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>Universities Management</h2>
+                <button class="btn btn-primary" id="addUniversityBtn">+ Add University</button>
+            </div>
+            <div class="data-table">
+                <table id="universitiesTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>City</th>
+                            <th>Website</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="universitiesTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Knowledge Base Tab -->
+    <div class="tab-content" id="knowledge-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>Knowledge Base Management</h2>
+                <div style="display: flex; gap: 10px;">
+                    <select id="knowledgeUniversityFilter" class="filter-select">
+                        <option value="">All Universities</option>
+                    </select>
+                    <button class="btn btn-primary" id="addKnowledgeBtn">+ Add Knowledge</button>
+                </div>
+            </div>
+            <div class="data-table">
+                <table id="knowledgeTable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>University</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="knowledgeTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Departments Tab -->
+    <div class="tab-content" id="departments-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>Departments Management</h2>
+                <div style="display: flex; gap: 10px;">
+                    <select id="departmentUniversityFilter" class="filter-select">
+                        <option value="">All Universities</option>
+                    </select>
+                    <button class="btn btn-primary" id="addDepartmentBtn">+ Add Department</button>
+                </div>
+            </div>
+            <div class="data-table">
+                <table id="departmentsTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>University</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="departmentsTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Tab -->
+    <div class="tab-content" id="analytics-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>Analytics Dashboard</h2>
+            </div>
+            <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #667eea;">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Analytics coming soon</div>
+                            <div class="stat-detail">Question logs, AI fallback frequency, and usage metrics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    {% endblock %}

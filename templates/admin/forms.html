@@ -1,0 +1,488 @@
+<!-- University Form Modal -->
+<div id="universityFormModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('universityFormModal')">&times;</span>
+        <h2 id="universityFormTitle">Add University</h2>
+        <form id="universityForm" onsubmit="submitUniversityForm(event)">
+            <input type="hidden" id="universityId">
+            
+            <!-- Required Fields -->
+            <div class="form-group">
+                <label for="uniName">University Name (English) *</label>
+                <input type="text" id="uniName" name="name" required 
+                    placeholder="e.g., Batna 2 University">
+            </div>
+
+            <div class="form-group">
+                <label for="uniCode">University Code *</label>
+                <input type="text" id="uniCode" name="code" required 
+                    placeholder="e.g., BATNA2" maxlength="50">
+            </div>
+
+            <!-- Optional Fields -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="uniCity">City</label>
+                    <input type="text" id="uniCity" name="city" 
+                        placeholder="e.g., Batna">
+                </div>
+                <div class="form-group">
+                    <label for="uniProvince">Province</label>
+                    <input type="text" id="uniProvince" name="province" 
+                        placeholder="e.g., Batna">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="uniWebsite">Website</label>
+                <input type="url" id="uniWebsite" name="website" 
+                    placeholder="https://example.dz">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="uniEmail">Email</label>
+                    <input type="email" id="uniEmail" name="email" 
+                        placeholder="contact@university.dz">
+                </div>
+                <div class="form-group">
+                    <label for="uniPhone">Phone</label>
+                    <input type="tel" id="uniPhone" name="phone" 
+                        placeholder="+213 33 81 51 33">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="uniAddress">Address</label>
+                <textarea id="uniAddress" name="address" 
+                    placeholder="Full address" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="uniDescription">Description</label>
+                <textarea id="uniDescription" name="description" 
+                    placeholder="Brief description of the university" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="uniActive">
+                    <input type="checkbox" id="uniActive" name="is_active" checked>
+                    Active
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save University</button>
+                <button type="button" class="btn btn-secondary" 
+                    onclick="closeModal('universityFormModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Faculty Form Modal -->
+<div id="facultyFormModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('facultyFormModal')">&times;</span>
+        <h2 id="facultyFormTitle">Add Faculty</h2>
+        <form id="facultyForm" onsubmit="submitFacultyForm(event)">
+            <input type="hidden" id="facultyId">
+            
+            <!-- University Selection -->
+            <div class="form-group">
+                <label for="facUniversity">University *</label>
+                <select id="facUniversity" name="university_id" required>
+                    <option value="">Select University</option>
+                </select>
+            </div>
+
+            <!-- Required Fields -->
+            <div class="form-group">
+                <label for="facName">Faculty Name (English) *</label>
+                <input type="text" id="facName" name="name" required 
+                    placeholder="e.g., Faculty of Science">
+            </div>
+
+            <div class="form-group">
+                <label for="facNameAr">Faculty Name (Arabic)</label>
+                <input type="text" id="facNameAr" name="name_ar" 
+                    placeholder="كلية العلوم">
+            </div>
+
+            <div class="form-group">
+                <label for="facNameFr">Faculty Name (French)</label>
+                <input type="text" id="facNameFr" name="name_fr" 
+                    placeholder="Faculté des Sciences">
+            </div>
+
+            <div class="form-group">
+                <label for="facCode">Faculty Code *</label>
+                <input type="text" id="facCode" name="code" required 
+                    placeholder="e.g., FS_BATNA2" maxlength="50">
+            </div>
+
+            <!-- Optional Fields -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="facDean">Dean</label>
+                    <input type="text" id="facDean" name="dean" 
+                        placeholder="Prof. Name">
+                </div>
+                <div class="form-group">
+                    <label for="facBuilding">Building</label>
+                    <input type="text" id="facBuilding" name="building" 
+                        placeholder="Building A">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="facEmail">Email</label>
+                    <input type="email" id="facEmail" name="email" 
+                        placeholder="faculty@university.dz">
+                </div>
+                <div class="form-group">
+                    <label for="facPhone">Phone</label>
+                    <input type="tel" id="facPhone" name="phone" 
+                        placeholder="+213 33 81 51 33">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="facWebsite">Official Website</label>
+                <input type="url" id="facWebsite" name="official_website" 
+                    placeholder="https://faculty.university.dz">
+            </div>
+
+            <div class="form-group">
+                <label for="facDescription">Description</label>
+                <textarea id="facDescription" name="description" 
+                    placeholder="Brief description" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="facActive">
+                    <input type="checkbox" id="facActive" name="is_active" checked>
+                    Active
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Faculty</button>
+                <button type="button" class="btn btn-secondary" 
+                    onclick="closeModal('facultyFormModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Department Form Modal -->
+<div id="departmentFormModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('departmentFormModal')">&times;</span>
+        <h2 id="departmentFormTitle">Add Department</h2>
+        <form id="departmentForm" onsubmit="submitDepartmentForm(event)">
+            <input type="hidden" id="departmentId">
+            
+            <!-- Selection Fields -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="deptUniversity">University *</label>
+                    <select id="deptUniversity" name="university_id" required 
+                        onchange="loadFacultiesForDept()">
+                        <option value="">Select University</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deptFaculty">Faculty *</label>
+                    <select id="deptFaculty" name="faculty_id" required>
+                        <option value="">Select Faculty</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Required Fields -->
+            <div class="form-group">
+                <label for="deptName">Department Name (English) *</label>
+                <input type="text" id="deptName" name="name" required 
+                    placeholder="e.g., Computer Science">
+            </div>
+
+            <div class="form-group">
+                <label for="deptNameAr">Department Name (Arabic)</label>
+                <input type="text" id="deptNameAr" name="name_ar" 
+                    placeholder="علوم الحاسبات">
+            </div>
+
+            <div class="form-group">
+                <label for="deptNameFr">Department Name (French)</label>
+                <input type="text" id="deptNameFr" name="name_fr" 
+                    placeholder="Informatique">
+            </div>
+
+            <div class="form-group">
+                <label for="deptCode">Department Code *</label>
+                <input type="text" id="deptCode" name="code" required 
+                    placeholder="e.g., CS_BATNA2" maxlength="50">
+            </div>
+
+            <!-- Optional Fields -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="deptHead">Head of Department</label>
+                    <input type="text" id="deptHead" name="head_of_department" 
+                        placeholder="Prof. Name">
+                </div>
+                <div class="form-group">
+                    <label for="deptBuilding">Building</label>
+                    <input type="text" id="deptBuilding" name="building" 
+                        placeholder="Building A - Floor 2">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="deptEmail">Email</label>
+                    <input type="email" id="deptEmail" name="email" 
+                        placeholder="department@university.dz">
+                </div>
+                <div class="form-group">
+                    <label for="deptPhone">Phone</label>
+                    <input type="tel" id="deptPhone" name="phone" 
+                        placeholder="+213 33 81 51 33">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="deptWebsite">Official Website</label>
+                <input type="url" id="deptWebsite" name="official_website" 
+                    placeholder="https://dept.university.dz">
+            </div>
+
+            <div class="form-group">
+                <label for="deptDescription">Description</label>
+                <textarea id="deptDescription" name="description" 
+                    placeholder="Brief description" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="deptActive">
+                    <input type="checkbox" id="deptActive" name="is_active" checked>
+                    Active
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Department</button>
+                <button type="button" class="btn btn-secondary" 
+                    onclick="closeModal('departmentFormModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Admin Form Modal -->
+<div id="adminFormModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('adminFormModal')">&times;</span>
+        <h2 id="adminFormTitle">Create Admin</h2>
+        <form id="adminForm" onsubmit="submitAdminForm(event)">
+            <input type="hidden" id="adminId">
+            
+            <!-- Required Fields -->
+            <div class="form-group">
+                <label for="adminUsername">Username *</label>
+                <input type="text" id="adminUsername" name="username" required 
+                    placeholder="admin_name" minlength="3">
+            </div>
+
+            <div class="form-group">
+                <label for="adminEmail">Email *</label>
+                <input type="email" id="adminEmail" name="email" required 
+                    placeholder="admin@university.dz">
+            </div>
+
+            <div class="form-group">
+                <label for="adminPassword">Password *</label>
+                <input type="password" id="adminPassword" name="password" 
+                    placeholder="At least 8 characters" minlength="8">
+                <small>Leave blank to keep current password (edit mode)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="adminFullName">Full Name</label>
+                <input type="text" id="adminFullName" name="full_name" 
+                    placeholder="Admin Full Name">
+            </div>
+
+            <!-- Admin Type -->
+            <div class="form-group">
+                <label for="adminType">Admin Type *</label>
+                <select id="adminType" name="role" required onchange="toggleUniversityField()">
+                    <option value="">Select Type</option>
+                    <option value="admin">University Admin (manages one university)</option>
+                    <option value="super_admin">Super Admin (manages entire system)</option>
+                </select>
+            </div>
+
+            <!-- University Selection (only for University Admin) -->
+            <div class="form-group" id="adminUniversityField" style="display: none;">
+                <label for="adminUniversity">University *</label>
+                <select id="adminUniversity" name="university_id">
+                    <option value="">Select University</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Admin</button>
+                <button type="button" class="btn btn-secondary" 
+                    onclick="closeModal('adminFormModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CSS Styling -->
+<style>
+    .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none !important;
+    }
+
+    .modal-content {
+        background-color: var(--background-color, white);
+        margin: 5% auto;
+        padding: 30px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .close {
+        color: var(--text-secondary, #999);
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .close:hover {
+        color: var(--text-primary, #000);
+    }
+
+    .modal-content h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--text-primary, #000);
+        font-size: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: var(--text-primary, #000);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border-color, #ddd);
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color, #667eea);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group small {
+        display: block;
+        margin-top: 3px;
+        color: var(--text-secondary, #999);
+        font-size: 12px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color, #667eea);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover, #5568d3);
+    }
+
+    .btn-secondary {
+        background-color: var(--border-color, #ddd);
+        color: var(--text-primary, #000);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--border-hover, #ccc);
+    }
+
+    @media (max-width: 600px) {
+        .modal-content {
+            width: 95%;
+            margin: 20% auto;
+            padding: 20px;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>

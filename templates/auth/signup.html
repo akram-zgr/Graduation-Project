@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Algerian Universities AI{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- Added back to home button -->
+        <a href="{{ url_for('landing') }}" class="back-to-home">
+            <span>←</span> Back to Home
+        </a>
+        
+        <div class="auth-header">
+            <h1>Create Account</h1>
+            <p>Join EduVerse AI</p>
+        </div>
+        
+        <!-- Changed to client-side form with JavaScript -->
+        <form id="signupForm" class="auth-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="User123">
+                </div>
+                
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Ahmed">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="student@gmail.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="university_id">University</label>
+                <select id="university_id" name="university_id" required>
+                    <option value="">Select university</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="faculty_id">Faculty</label>
+                <select id="faculty_id" name="faculty_id" required disabled>
+                    <option value="">Select faculty</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="department_id">Department</label>
+                    <select id="department_id" name="department_id" required disabled>
+                        <option value="">Select department</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="student_id">Student ID</label>
+                    <input type="text" id="student_id" name="student_id" placeholder="2024001">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="At least 8 characters">
+            </div>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+            
+            <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load universities on page load
+async function loadUniversities() {
+    try {
+        const response = await fetch('/auth/universities');
+        const data = await response.json();
+        
+        const select = document.getElementById('university_id');
+        data.universities.forEach(uni => {
+            const option = document.createElement('option');
+            option.value = uni.id;
+            option.textContent = uni.name;
+            if (uni.city) {
+                option.textContent += ` (${uni.city})`;
+            }
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading universities:', error);
+    }
+}
+
+// Load faculties when university is selected
+async function loadFaculties(universityId) {
+    const facSelect = document.getElementById('faculty_id');
+    const deptSelect = document.getElementById('department_id');
+    
+    facSelect.innerHTML = '<option value="">Loading faculties...</option>';
+    facSelect.disabled = true;
+    deptSelect.innerHTML = '<option value="">Select faculty first...</option>';
+    deptSelect.disabled = true;
+    
+    try {
+        const response = await fetch(`/auth/universities/${universityId}/faculties`);
+        const data = await response.json();
+        
+        facSelect.innerHTML = '<option value="">Select your faculty...</option>';
+        data.faculties.forEach(fac => {
+            const option = document.createElement('option');
+            option.value = fac.id;
+            option.textContent = fac.name;
+            if (fac.name_ar) {
+                option.textContent += ` (${fac.name_ar})`;
+            }
+            facSelect.appendChild(option);
+        });
+        facSelect.disabled = false;
+    } catch (error) {
+        console.error('Error loading faculties:', error);
+        facSelect.innerHTML = '<option value="">Error loading faculties</option>';
+        facSelect.disabled = false;
+    }
+}
+
+// Load departments when faculty is selected
+async function loadDepartments(facultyId) {
+    const deptSelect = document.getElementById('department_id');
+    deptSelect.innerHTML = '<option value="">Loading departments...</option>';
+    deptSelect.disabled = true;
+    
+    try {
+        const response = await fetch(`/auth/faculties/${facultyId}/departments`);
+        const data = await response.json();
+        
+        deptSelect.innerHTML = '<option value="">Select your department...</option>';
+        data.departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept.id;
+            option.textContent = dept.name;
+            if (dept.name_ar) {
+                option.textContent += ` (${dept.name_ar})`;
+            }
+            deptSelect.appendChild(option);
+        });
+        deptSelect.disabled = false;
+    } catch (error) {
+        console.error('Error loading departments:', error);
+        deptSelect.innerHTML = '<option value="">Error loading departments</option>';
+        deptSelect.disabled = false;
+    }
+}
+
+// Listen for university selection change
+document.getElementById('university_id').addEventListener('change', (e) => {
+    const universityId = e.target.value;
+    if (universityId) {
+        loadFaculties(universityId);
+    } else {
+        const facSelect = document.getElementById('faculty_id');
+        const deptSelect = document.getElementById('department_id');
+        facSelect.innerHTML = '<option value="">Select university first...</option>';
+        facSelect.disabled = true;
+        deptSelect.innerHTML = '<option value="">Select faculty first...</option>';
+        deptSelect.disabled = true;
+    }
+});
+
+// Listen for faculty selection change
+document.getElementById('faculty_id').addEventListener('change', (e) => {
+    const facultyId = e.target.value;
+    if (facultyId) {
+        loadDepartments(facultyId);
+    } else {
+        const deptSelect = document.getElementById('department_id');
+        deptSelect.innerHTML = '<option value="">Select faculty first...</option>';
+        deptSelect.disabled = true;
+    }
+});
+
+// Load universities when page loads
+loadUniversities();
+
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        full_name: document.getElementById('full_name').value,
+        university_id: document.getElementById('university_id').value,
+        faculty_id: document.getElementById('faculty_id').value,
+        department_id: document.getElementById('department_id').value,
+        student_id: document.getElementById('student_id').value
+    };
+    
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+    
+    try {
+        const response = await fetch('/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            errorDiv.style.display = 'none';
+            successDiv.textContent = data.message;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                window.location.href = '/auth/login';
+            }, 3000);
+        } else {
+            successDiv.style.display = 'none';
+            errorDiv.textContent = data.error || 'Signup failed';
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

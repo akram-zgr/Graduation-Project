@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+
+{% block title %}Super Admin Dashboard - Algerian Universities AI Assistant{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+        <div>
+            <h1>Super Admin Dashboard</h1>
+            <p id="systemInfo" style="margin: 5px 5px; color: var(--text-secondary); font-size: 14px;">System-wide Management</p>
+        </div>
+        <div class="admin-actions">
+            <span id="adminNameDisplay" style="margin: 5px 5px 5px 5px; color: var(--text-secondary);"></span>
+            <button id="refreshBtn" class="btn btn-primary">Refresh</button>
+            <button id="logoutBtn" class="btn btn-outline">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-tabs">
+        <button class="tab-button active" data-tab="overview">Overview</button>
+        <button class="tab-button" data-tab="universities">Universities</button>
+        <button class="tab-button" data-tab="faculties">Faculties</button>
+        <button class="tab-button" data-tab="departments">Departments</button>
+        <button class="tab-button" data-tab="users">Users</button>
+        <button class="tab-button" data-tab="admins">Admins</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div class="tab-content active" id="overview-tab">
+        <!-- System Stats Cards -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #667eea;">🏫</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalUniversities">-</div>
+                    <div class="stat-label">Universities</div>
+                    <div class="stat-detail" id="activeUniversities">- active</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #48bb78;">🎓</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalFaculties">-</div>
+                    <div class="stat-label">Faculties</div>
+                    <div class="stat-detail" id="activeFaculties">- active</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #f56565;">📚</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalDepartments">-</div>
+                    <div class="stat-label">Departments</div>
+                    <div class="stat-detail" id="activeDepartments">- active</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #ed8936;">👥</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalUsers">-</div>
+                    <div class="stat-label">Users</div>
+                    <div class="stat-detail" id="verifiedUsers">- verified</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Summary -->
+        <div class="admin-section">
+            <h2>📊 System Overview</h2>
+            <div class="stats-table">
+                <table>
+                    <tr>
+                        <td><strong>Total Universities:</strong></td>
+                        <td id="sysUniversities">-</td>
+                        <td style="width: 50%;"></td>
+                        <td><strong>Total Faculties:</strong></td>
+                        <td id="sysFaculties">-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Departments:</strong></td>
+                        <td id="sysDepartments">-</td>
+                        <td></td>
+                        <td><strong>Total Users:</strong></td>
+                        <td id="sysUsers">-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Admins:</strong></td>
+                        <td id="sysAdmins">-</td>
+                        <td></td>
+                        <td><strong>Active Universities:</strong></td>
+                        <td id="sysActiveUnis">-</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Universities Tab -->
+    <div class="tab-content" id="universities-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>🏫 Universities Management</h2>
+                <button class="btn btn-primary" id="addUniversityBtn" onclick="openAddUniversityForm()">+ Add University</button>
+            </div>
+            <div class="data-table">
+                <table id="universitiesTable">
+                    <thead>
+                        <tr>
+                            <th>University Name</th>
+                            <th>Code</th>
+                            <th>City</th>
+                            <th>Faculties</th>
+                            <th>Departments</th>
+                            <th>Users</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="universitiesTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Faculties Tab -->
+    <div class="tab-content" id="faculties-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>🎓 Faculties Management</h2>
+                <div style="display: flex; gap: 10px;">
+                    <select id="facultyUnivFilter" class="filter-select">
+                        <option value="">All Universities</option>
+                    </select>
+                </div>
+            </div>
+            <div class="data-table">
+                <table id="facultiesTable">
+                    <thead>
+                        <tr>
+                            <th>Faculty Name</th>
+                            <th>University</th>
+                            <th>Code</th>
+                            <th>Dean</th>
+                            <th>Departments</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facultiesTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Departments Tab -->
+    <div class="tab-content" id="departments-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>📚 Departments Management</h2>
+                <div style="display: flex; gap: 10px;">
+                    <select id="deptUnivFilter" class="filter-select">
+                        <option value="">All Universities</option>
+                    </select>
+                </div>
+            </div>
+            <div class="data-table">
+                <table id="departmentsTable">
+                    <thead>
+                        <tr>
+                            <th>Department Name</th>
+                            <th>University</th>
+                            <th>Faculty</th>
+                            <th>Code</th>
+                            <th>Head</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="departmentsTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="tab-content" id="users-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>👥 Users Management</h2>
+                <div style="display: flex; gap: 10px;">
+                    <select id="userUnivFilter" class="filter-select">
+                        <option value="">All Universities</option>
+                    </select>
+                    <select id="userFilter" class="filter-select">
+                        <option value="all">All Users</option>
+                        <option value="verified">Verified Only</option>
+                        <option value="unverified">Unverified Only</option>
+                    </select>
+                </div>
+            </div>
+            <div class="data-table">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>University</th>
+                            <th>Department</th>
+                            <th>Verified</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admins Tab -->
+    <div class="tab-content" id="admins-tab">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>🔑 Admins Management</h2>
+                <button class="btn btn-primary" id="addAdminBtn" onclick="openAddAdminForm()">+ Create Admin</button>
+            </div>
+            <div class="data-table">
+                <table id="adminsTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>University</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminsTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .stats-table table tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stats-table table td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .stats-table table tr:last-child {
+            border-bottom: none;
+        }
+    </style>
+
+    {% include 'admin/forms.html' %}
+    <script src="{{ url_for('static', filename='js/forms_handler.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/super_admin_dashboard.js') }}"></script>
+    {% endblock %}
