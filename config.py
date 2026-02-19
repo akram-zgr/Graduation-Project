@@ -6,7 +6,7 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
 
     # Database settings
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///database.db")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Google Gemini API settings

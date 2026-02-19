@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 from flask import Flask
 from flask_mail import Mail
 from config import Config
@@ -5,10 +10,6 @@ from extensions import db, mail
 from routes.auth import auth_bp
 from routes.chat import chat_bp
 from routes.admin import admin_bp
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object(Config)

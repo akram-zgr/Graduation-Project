@@ -566,8 +566,15 @@ def main() -> None:
     logger.info("University Academic Chatbot (Telegram) is starting...")
     logger.info("Multi-university › faculty › department flow: ENABLED")
     logger.info("Press Ctrl+C to stop.")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    PORT = int(os.environ.get("PORT", 10000))
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path=TELEGRAM_BOT_TOKEN,
+        webhook_url=f"{WEBHOOK_URL}/{TELEGRAM_BOT_TOKEN}",
+    )
 
 if __name__ == "__main__":
     main()

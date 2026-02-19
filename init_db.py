@@ -9,8 +9,9 @@ def init_database(drop_existing=True):
             db.drop_all()
         
         print("Creating all tables...")
+        print(app.config['SQLALCHEMY_DATABASE_URI'])
         db.create_all()
-        
+
         print("\n=== Initializing Universities ===")
         
         # Batna 2 University
